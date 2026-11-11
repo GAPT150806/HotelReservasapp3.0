@@ -1,0 +1,87 @@
+﻿
+@model HotelReservasapp_.WebApp.Models.ViewModels.Bedrooms._BedroomForm
+
+@{
+    ViewData["Title"] = "Registrar habitación";
+}
+
+<div class="container mt-4">
+    <h2>Registrar habitación</h2>
+    <p class="text-muted">
+        Registre una habitación y asigne sus características.
+    </p>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <form asp-action="Create" method="post">
+
+                <div class="mb-3">
+                    <label asp-for="IdHotel" class="form-label"></label>
+
+                    <select asp-for="IdHotel"
+                            asp-items="Model.Hoteles"
+                            class="form-select"
+                            id="IdHotel">
+                        <option value="">Seleccione un hotel</option>
+                    </select>
+
+                    <span asp-validation-for="IdHotel"
+                          class="text-danger"></span>
+                </div>
+
+                <partial name="_BedroomForm" model="Model" />
+
+                <button type="submit" class="btn btn-primary">
+                    Guardar
+                </button>
+
+                <a asp-action="Index" class="btn btn-secondary">
+                    Cancelar
+                </a>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.getElementById("IdHotel").addEventListener("change", async function () {
+            const hotelId = this.value;
+            const floorSelect = document.getElementById("IdPiso");
+
+            floorSelect.innerHTML =
+                '<option value="">Seleccione un piso</option>';
+
+            if (!hotelId)
+                return;
+
+            try {
+                const response = await fetch(
+                    '@Url.Action("GetFloorsByHotel", "Bedrooms")?idHotel='
+                    + encodeURIComponent(hotelId)
+                );
+
+                if (!response.ok)
+                    throw new Error("No se pudieron cargar los pisos.");
+
+                const floors = await response.json();
+
+                floors.forEach(floor => {
+                    const option = document.createElement("option");
+                    option.value = floor.id;
+                    option.textContent = floor.nombre;
+
+                    floorSelect.appendChild(option);
+                });
+            }
+            catch (error) {
+                alert(error.message);
+            }
+        });
+    </script>
+}

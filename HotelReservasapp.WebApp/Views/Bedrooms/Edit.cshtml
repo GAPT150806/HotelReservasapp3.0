@@ -1,0 +1,49 @@
+﻿
+@model HotelReservasapp_.WebApp.Models.ViewModels.Bedrooms._BedroomForm
+
+@{
+    ViewData["Title"] = "Editar habitación";
+}
+
+<div class="container mt-4">
+    <h2>Editar habitación</h2>
+    <p class="text-muted">
+        Modifique los datos de la habitación.
+    </p>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <form asp-action="Edit"
+                  asp-route-id="@Model.Id"
+                  method="post">
+
+                <input asp-for="Id" type="hidden" />
+
+                <div class="mb-3">
+                    <label class="form-label">Hotel</label>
+
+                    <input value="@Model.HotelNombre"
+                           class="form-control"
+                           readonly />
+                </div>
+
+                <partial name="_BedroomForm" model="Model" />
+
+                <button type="submit" class="btn btn-primary">
+                    Guardar cambios
+                </button>
+
+                <a asp-action="Index" class="btn btn-secondary">
+                    Cancelar
+                </a>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

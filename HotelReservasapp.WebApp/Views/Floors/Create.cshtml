@@ -1,0 +1,61 @@
+﻿@model HotelReservasapp_.WebApp.Models.ViewModels.Floors.FloorViewModel
+
+@{
+    ViewData["Title"] = "Registrar piso";
+}
+
+<div class="container mt-4">
+    <h2>Registrar piso</h2>
+    <p class="text-muted">Asigne un número de piso a un hotel.</p>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <form asp-action="Create" method="post">
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="IdHotel" class="form-label"></label>
+
+                    <select asp-for="IdHotel"
+                            asp-items="Model.Hoteles"
+                            class="form-select">
+                        <option value="">Seleccione un hotel</option>
+                    </select>
+
+                    <span asp-validation-for="IdHotel"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Numero" class="form-label"></label>
+
+                    <input asp-for="Numero"
+                           type="number"
+                           min="1"
+                           class="form-control"
+                           placeholder="Ejemplo: 1" />
+
+                    <span asp-validation-for="Numero"
+                          class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Guardar
+                </button>
+
+                <a asp-action="Index" class="btn btn-secondary">
+                    Cancelar
+                </a>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

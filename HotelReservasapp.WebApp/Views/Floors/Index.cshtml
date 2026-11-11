@@ -1,0 +1,124 @@
+﻿@model IEnumerable<HotelReservasapp_.WebApp.Models.ViewModels.Floors.FloorViewModel>
+@using HotelReservasapp.BusinessLogic.Enums
+
+@{
+    ViewData["Title"] = "Pisos";
+}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>Pisos</h2>
+            <p class="text-muted mb-0">
+                Administración de pisos por hotel.
+            </p>
+        </div>
+
+        <a asp-action="Create" class="btn btn-primary">
+            Registrar piso
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] is string success)
+    {
+        <div class="alert alert-success">@success</div>
+    }
+
+    @if (TempData["ErrorMessage"] is string error)
+    {
+        <div class="alert alert-danger">@error</div>
+    }
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            @if (!Model.Any())
+            {
+                <p class="text-muted mb-0">
+                    No hay pisos registrados.
+                </p>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Hotel</th>
+                                <th>Número</th>
+                                <th>Estado</th>
+                                <th class="text-end">Acciones</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var floor in Model)
+                            {
+                                <tr>
+                                    <td>@floor.Id</td>
+                                    <td>@floor.HotelNombre</td>
+                                    <td>@floor.Numero</td>
+
+                                    <td>
+                                        @if (floor.Estado == GeneralState.Activo)
+                                        {
+                                            <span class="badge bg-success">
+                                                Activo
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                Inactivo
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <td class="text-end">
+
+                                        <a asp-action="Edit"
+                                           asp-route-id="@floor.Id"
+                                           class="btn btn-sm btn-outline-primary">
+                                            Editar
+                                        </a>
+
+                                        <form asp-action="ChangeState"
+                                              asp-route-id="@floor.Id"
+                                              method="post"
+                                              class="d-inline">
+
+                                            <input type="hidden"
+                                                   name="estado"
+                                                   value="@(floor.Estado == GeneralState.Activo ? GeneralState.Inactivo : GeneralState.Activo)" />
+
+                                            @if (floor.Estado == GeneralState.Activo)
+                                            {
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-outline-danger">
+                                                    Desactivar
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-outline-success">
+                                                    Activar
+                                                </button>
+                                            }
+
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

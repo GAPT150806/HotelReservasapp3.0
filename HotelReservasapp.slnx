@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/API/">
+    <Project Path="HotelReservasapp.API/HotelReservasapp.API.csproj" />
+  </Folder>
+  <Folder Name="/BL/">
+    <Project Path="HotelReservasapp.BusinessLogic/HotelReservasapp.BusinessLogic.csproj" />
+  </Folder>
+  <Folder Name="/DAL/">
+    <Project Path="HotelReservasapp.DataAccess/HotelReservasapp.DataAccess.csproj" />
+  </Folder>
+  <Folder Name="/WebApp/">
+    <File Path="HotelReservasapp.DataAccess/DependencyInjection.cs" />
+    <Project Path="HotelReservasapp.WebApp/HotelReservasapp.WebApp.csproj" />
+  </Folder>
+</Solution>

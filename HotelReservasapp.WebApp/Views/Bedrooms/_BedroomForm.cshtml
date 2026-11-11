@@ -1,0 +1,68 @@
+﻿
+@model HotelReservasapp_.WebApp.Models.ViewModels.Bedrooms._BedroomForm
+
+<div asp-validation-summary="ModelOnly"
+     class="text-danger mb-3"></div>
+
+<div class="mb-3">
+    <label asp-for="IdPiso" class="form-label"></label>
+
+    <select asp-for="IdPiso"
+            asp-items="Model.Pisos"
+            class="form-select">
+        <option value="">Seleccione un piso</option>
+    </select>
+
+    <span asp-validation-for="IdPiso"
+          class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="IdTipoHabitacion" class="form-label"></label>
+
+    <select asp-for="IdTipoHabitacion"
+            asp-items="Model.TiposHabitacion"
+            class="form-select">
+        <option value="">Seleccione un tipo</option>
+    </select>
+
+    <span asp-validation-for="IdTipoHabitacion"
+          class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Numero" class="form-label"></label>
+
+    <input asp-for="Numero"
+           type="number"
+           min="1"
+           class="form-control" />
+
+    <span asp-validation-for="Numero"
+          class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Capacidad" class="form-label"></label>
+
+    <input asp-for="Capacidad"
+           type="number"
+           min="1"
+           class="form-control" />
+
+    <span asp-validation-for="Capacidad"
+          class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="TarifaPorNoche" class="form-label"></label>
+
+    <input asp-for="TarifaPorNoche"
+           type="number"
+           min="0"
+           step="0.01"
+           class="form-control" />
+
+    <span asp-validation-for="TarifaPorNoche"
+          class="text-danger"></span>
+</div>
