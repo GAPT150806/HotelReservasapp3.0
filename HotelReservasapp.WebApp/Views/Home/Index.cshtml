@@ -1,8 +1,184 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model HotelReservasapp_.WebApp.Models.ViewModels.Dashboard.DashboardViewModel
+
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Panel principal";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="dashboard-page">
+
+    <div class="dashboard-intro">
+        <div>
+            <h2>Resumen</h2>
+            <p>Consulta el estado general de la estructura hotelera.</p>
+        </div>
+
+        <span class="dashboard-live">
+            <span></span>
+            Datos actualizados
+        </span>
+    </div>
+
+    <!-- TARJETAS PRINCIPALES -->
+    <section class="dashboard-grid">
+
+        <article class="dashboard-stat-card">
+            <div class="stat-icon hotels-icon">⌂</div>
+
+            <div class="stat-information">
+                <span>Hoteles</span>
+                <strong>@Model.TotalHoteles.ToString("D2")</strong>
+                <small>@Model.HotelesActivos activos</small>
+            </div>
+        </article>
+
+        <article class="dashboard-stat-card">
+            <div class="stat-icon floors-icon">▤</div>
+
+            <div class="stat-information">
+                <span>Pisos</span>
+                <strong>@Model.TotalPisos.ToString("D2")</strong>
+                <small>@Model.PisosActivos activos</small>
+            </div>
+        </article>
+
+        <article class="dashboard-stat-card">
+            <div class="stat-icon bedrooms-icon">▦</div>
+
+            <div class="stat-information">
+                <span>Habitaciones</span>
+                <strong>@Model.TotalHabitaciones.ToString("D2")</strong>
+                <small>Registradas</small>
+            </div>
+        </article>
+
+        <article class="dashboard-stat-card">
+            <div class="stat-icon types-icon">◇</div>
+
+            <div class="stat-information">
+                <span>Tipos de habitaciones</span>
+                <strong>@Model.TotalTiposHabitacion.ToString("D2")</strong>
+                <small>Configurados</small>
+            </div>
+        </article>
+
+    </section>
+
+    <!-- ESTADO DE HABITACIONES -->
+    <section class="dashboard-panel">
+
+        <div class="panel-heading">
+            <div>
+                <h3>Estado de las habitaciones</h3>
+                <p>Distribución según el estado operativo actual.</p>
+            </div>
+
+            <span class="panel-total">
+                @Model.TotalHabitaciones habitaciones
+            </span>
+        </div>
+
+        @if (Model.TotalHabitaciones == 0)
+        {
+            <div class="dashboard-empty">
+                <span>▦</span>
+                <strong>No hay habitaciones registradas</strong>
+                <p>Cuando registres habitaciones, aquí aparecerá su distribución por estado.</p>
+                <a asp-controller="Bedrooms" asp-action="Index" class="btn btn-primary">
+                    Ver habitaciones
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="status-list">
+
+                @foreach (var estado in Model.EstadosHabitaciones)
+                {
+                    var porcentaje = estado.Porcentaje.ToString(
+                        "0.#",
+                        CultureInfo.InvariantCulture
+                    );
+
+                    <div class="status-item">
+
+                        <div class="status-information">
+                            <span class="status-name">
+                                <span class="status-indicator @estado.CssClass"></span>
+                                @estado.Nombre
+                            </span>
+
+                            <span class="status-value">
+                                @estado.Cantidad
+                                <small>(@porcentaje%)</small>
+                            </span>
+                        </div>
+
+                        <div class="status-progress">
+                            <div class="status-progress-bar @estado.CssClass"
+                                 style="width: @(porcentaje)%">
+                            </div>
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+        }
+
+    </section>
+
+    <!-- ACCESOS RÁPIDOS -->
+    <section class="dashboard-panel">
+
+        <div class="panel-heading">
+            <div>
+                <h3>Accesos rápidos</h3>
+                <p>Accede directamente a los módulos de administración.</p>
+            </div>
+        </div>
+
+        <div class="dashboard-shortcuts">
+
+            <a asp-controller="Hotels" asp-action="Index" class="shortcut-item">
+                <span class="shortcut-icon hotels-icon">⌂</span>
+                <span>
+                    <strong>Hoteles</strong>
+                    <small>Administrar hoteles</small>
+                </span>
+                <span class="shortcut-arrow">›</span>
+            </a>
+
+            <a asp-controller="Floors" asp-action="Index" class="shortcut-item">
+                <span class="shortcut-icon floors-icon">▤</span>
+                <span>
+                    <strong>Pisos</strong>
+                    <small>Administrar pisos</small>
+                </span>
+                <span class="shortcut-arrow">›</span>
+            </a>
+
+            <a asp-controller="Bedrooms" asp-action="Index" class="shortcut-item">
+                <span class="shortcut-icon bedrooms-icon">▦</span>
+                <span>
+                    <strong>Habitaciones</strong>
+                    <small>Administrar habitaciones</small>
+                </span>
+                <span class="shortcut-arrow">›</span>
+            </a>
+
+            <a asp-controller="BedroomTypes" asp-action="Index" class="shortcut-item">
+                <span class="shortcut-icon types-icon">◇</span>
+                <span>
+                    <strong>Tipos de habitaciones</strong>
+                    <small>Administrar tipos</small>
+                </span>
+                <span class="shortcut-arrow">›</span>
+            </a>
+
+        </div>
+
+    </section>
+
 </div>

@@ -1,85 +1,142 @@
-﻿<!DOCTYPE html>
+﻿
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+}
+
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light">
+
     <title>@ViewData["Title"] - Hotel LosBros</title>
-    <script type="importmap"></script>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/HotelReservasapp_.WebApp.styles.css" asp-append-version="true" />
 </head>
+
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Hotel LosBros</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark"
-                               asp-controller="Home"
-                               asp-action="Index">
-                                Inicio
-                            </a>
-                        </li>
+    <div class="app-shell">
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark"
-                               asp-controller="Hotels"
-                               asp-action="Index">
-                                Hoteles
-                            </a>
-                        </li>
+        <!-- Fondo para cerrar el menú en móviles -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark"
-                               asp-controller="Floors"
-                               asp-action="Index">
-                                Pisos
-                            </a>
-                        </li>
+        <!-- MENÚ LATERAL -->
+        <aside class="app-sidebar" id="appSidebar">
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark"
-                               asp-controller="BedroomTypes"
-                               asp-action="Index">
-                                Tipos de habitaciones
-                            </a>
-                        </li>
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="sidebar-brand">
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark"
-                               asp-controller="Bedrooms"
-                               asp-action="Index">
-                                Habitaciones
-                            </a>
-                        </li>
+                <span class="brand-logo">H</span>
 
-                    </ul>
-                </div>
+                <span class="brand-info">
+                    <strong>Hotel LosBros</strong>
+                    <small>Sistema de gestión</small>
+                </span>
+
+            </a>
+
+            <div class="sidebar-section-title">
+                MENÚ PRINCIPAL
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+
+            <nav class="sidebar-nav">
+
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="sidebar-link @(currentController == "Home" ? "active" : "")">
+                    <span class="nav-icon">⌂</span>
+                    <span>Inicio</span>
+                </a>
+
+                <a asp-controller="Hotels"
+                   asp-action="Index"
+                   class="sidebar-link @(currentController == "Hotels" ? "active" : "")">
+                    <span class="nav-icon">▤</span>
+                    <span>Hoteles</span>
+                </a>
+
+                <a asp-controller="Floors"
+                   asp-action="Index"
+                   class="sidebar-link @(currentController == "Floors" ? "active" : "")">
+                    <span class="nav-icon">▥</span>
+                    <span>Pisos</span>
+                </a>
+
+                <a asp-controller="Bedrooms"
+                   asp-action="Index"
+                   class="sidebar-link @(currentController == "Bedrooms" ? "active" : "")">
+                    <span class="nav-icon">▦</span>
+                    <span>Habitaciones</span>
+                </a>
+
+                <a asp-controller="BedroomTypes"
+                   asp-action="Index"
+                   class="sidebar-link @(currentController == "BedroomTypes" ? "active" : "")">
+                    <span class="nav-icon">◇</span>
+                    <span>Tipos de habitaciones</span>
+                </a>
+
+            </nav>
+
+            <div class="sidebar-footer">
+                <span class="sidebar-footer-icon">●</span>
+                <span>Sistema administrativo</span>
+            </div>
+
+        </aside>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <div class="app-main">
+
+            <header class="app-header">
+
+                <div class="header-left">
+
+                    <button type="button"
+                            class="mobile-menu-btn"
+                            id="sidebarToggle"
+                            aria-label="Abrir menú"
+                            aria-expanded="false">
+                        ☰
+                    </button>
+
+                    <div>
+                        <h1>@ViewData["Title"]</h1>
+                        <p>Hotel LosBros · Sistema de gestión</p>
+                    </div>
+
+                </div>
+
+                <div class="header-right">
+                    <span class="header-date">
+                        @DateTime.Now.ToString("dd/MM/yyyy")
+                    </span>
+                </div>
+
+            </header>
+
+            <main class="app-content">
+                @RenderBody()
+            </main>
+
+            <footer class="app-footer">
+                <span>© @DateTime.Now.Year HotelLosBros</span>
+            </footer>
+
+        </div>
+
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - Hotel LosBros - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

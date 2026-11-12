@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace HotelReservasapp_.WebApp.Models.ViewModels.Bedrooms;
 
-public class _BedroomForm
+public class BedroomViewModel
 {
     public int Id { get; set; }
 

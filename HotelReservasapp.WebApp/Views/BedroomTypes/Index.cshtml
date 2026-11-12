@@ -35,15 +35,28 @@
             }
             else
             {
+                
+                <div class="table-tools">
+                    <div class="table-search">
+                        <span>⌕</span>
+                        <input type="search"
+                               class="form-control"
+                               data-table-search
+                               placeholder="Buscar tipo o características..." />
+                    </div>
+
+                    <span class="table-result-count" data-table-count></span>
+                </div>
+
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle">
+                    <table class="table table-hover align-middle" data-enhanced-table>
 
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Nombre</th>
-                                <th>Características</th>
-                                <th class="text-end">Acciones</th>
+                                <th data-sortable>ID</th>
+                                <th data-sortable>Nombre</th>
+                                <th data-sortable>Características</th>
+                                <th class="text-end" data-no-sort>Acciones</th>
                             </tr>
                         </thead>
 

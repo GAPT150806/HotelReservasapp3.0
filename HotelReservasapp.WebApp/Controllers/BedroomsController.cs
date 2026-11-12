@@ -36,7 +36,7 @@ public class BedroomsController : Controller
         var floorNumbers = floors.ToDictionary(f => f.Id, f => f.Numero);
         var typeNames = types.ToDictionary(t => t.Id, t => t.Nombre);
 
-        var model = bedrooms.Select(b => new _BedroomForm
+        var model = bedrooms.Select(b => new BedroomViewModel
         {
             Id = b.Id,
             IdHotel = b.IdHotel,
@@ -60,7 +60,7 @@ public class BedroomsController : Controller
     [HttpGet]
     public async Task<IActionResult> Create()
     {
-        var model = new _BedroomForm();
+        var model = new BedroomViewModel();
 
         await LoadCatalogsAsync(model);
 
@@ -69,7 +69,7 @@ public class BedroomsController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(_BedroomForm model)
+    public async Task<IActionResult> Create(BedroomViewModel model)
     {
         if (!ModelState.IsValid)
         {
@@ -111,12 +111,12 @@ public class BedroomsController : Controller
 
         var bedroom = await _bedroomService.GetByIdAsync(id);
 
-        var hotel = await _hotelService.GetByIdAsync(bedroom.IdHotel);
-
         if (bedroom is null)
             return NotFound();
 
-        var model = new _BedroomForm
+        var hotel = await _hotelService.GetByIdAsync(bedroom.IdHotel);
+
+        var model = new BedroomViewModel
         {
             Id = bedroom.Id,
             IdHotel = bedroom.IdHotel,
@@ -136,7 +136,7 @@ public class BedroomsController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, _BedroomForm model)
+    public async Task<IActionResult> Edit(int id, BedroomViewModel model)
     {
         if (id != model.Id)
             return BadRequest();
@@ -189,22 +189,26 @@ public class BedroomsController : Controller
         return View(model);
     }
 
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ChangeState(int id, BedroomState estado)
     {
         if (id <= 0 || !Enum.IsDefined(estado))
-            return BadRequest();
+        {
+            TempData["ErrorMessage"] = "Los datos del cambio de estado no son válidos.";
+            return RedirectToAction(nameof(Index));
+        }
 
         try
         {
             await _bedroomService.ChangeStateAsync(id, estado);
 
-            TempData["SuccessMessage"] = "Estado de la habitación actualizado correctamente.";
+            TempData["SuccessMessage"] = "El estado de la habitación se actualizó correctamente.";
         }
-        catch (KeyNotFoundException)
+        catch (KeyNotFoundException ex)
         {
-            return NotFound();
+            TempData["ErrorMessage"] = ex.Message;
         }
         catch (ArgumentException ex)
         {
@@ -217,6 +221,22 @@ public class BedroomsController : Controller
 
         return RedirectToAction(nameof(Index));
     }
+
+
+    private static string ObtenerNombreEstado(BedroomState estado)
+    {
+        return estado switch
+        {
+            BedroomState.Disponible => "Disponible",
+            BedroomState.Reservada => "Reservada",
+            BedroomState.Ocupada => "Ocupada",
+            BedroomState.Limpieza => "Limpieza",
+            BedroomState.Mantenimiento => "Mantenimiento",
+            BedroomState.FueraServicio => "Fuera de servicio",
+            _ => "Desconocido"
+        };
+    }
+
 
     [HttpGet]
     public async Task<IActionResult> GetFloorsByHotel(int idHotel)
@@ -235,7 +255,7 @@ public class BedroomsController : Controller
         return Json(result);
     }
 
-    private async Task LoadCatalogsAsync(_BedroomForm model, int? currentFloorId = null)
+    private async Task LoadCatalogsAsync(BedroomViewModel model, int? currentFloorId = null)
     {
         var hotels = await _hotelService.GetAllAsync();
 

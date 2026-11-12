@@ -1,5 +1,5 @@
 ﻿
-@model IEnumerable<HotelReservasapp_.WebApp.Models.ViewModels.Bedrooms._BedroomForm>
+@model IEnumerable<HotelReservasapp_.WebApp.Models.ViewModels.Bedrooms.BedroomViewModel>
 @using HotelReservasapp.BusinessLogic.Enums
 
 @{
@@ -20,9 +20,23 @@
             _ => "Desconocido"
         };
     }
+
+    public static string EstadoCss(BedroomState estado)
+    {
+        return estado switch
+        {
+            BedroomState.Disponible => "bg-success",
+            BedroomState.Reservada => "bg-primary",
+            BedroomState.Ocupada => "bg-info text-dark",
+            BedroomState.Limpieza => "bg-warning text-dark",
+            BedroomState.Mantenimiento => "bg-secondary",
+            BedroomState.FueraServicio => "bg-danger",
+            _ => "bg-dark"
+        };
+    }
 }
 
-<div class="container mt-4">
+<div class="container-fluid mt-4">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
@@ -33,19 +47,33 @@
         </div>
 
         <a asp-action="Create" class="btn btn-primary">
-            Registrar habitación
+            + Registrar habitación
         </a>
     </div>
 
-    @if (TempData["SuccessMessage"] is string success)
+    <div data-state-feedback
+         class="alert d-none"
+         role="status"
+         aria-live="polite">
+    </div>
+
+    
+    @if (TempData["SuccessMessage"] is string successMessage)
     {
-        <div class="alert alert-success">@success</div>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Correcto:</strong> @successMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
     }
 
-    @if (TempData["ErrorMessage"] is string error)
+    @if (TempData["ErrorMessage"] is string errorMessage)
     {
-        <div class="alert alert-danger">@error</div>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error:</strong> @errorMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
     }
+
 
     <div class="card shadow-sm">
         <div class="card-body">
@@ -58,26 +86,42 @@
             }
             else
             {
+                <div class="table-tools">
+                    <div class="table-search">
+                        <span>⌕</span>
+
+                        <input type="search"
+                               class="form-control"
+                               data-table-search
+                               placeholder="Buscar por hotel, piso, número, tipo o estado..." />
+                    </div>
+
+                    <span class="table-result-count"
+                          data-table-count></span>
+                </div>
+
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle">
+                    <table class="table table-hover align-middle"
+                           data-enhanced-table>
 
                         <thead>
                             <tr>
-                                <th>Hotel</th>
-                                <th>Piso</th>
-                                <th>Número</th>
-                                <th>Tipo</th>
-                                <th>Capacidad</th>
-                                <th>Tarifa por noche</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
+                                <th data-sortable>Hotel</th>
+                                <th data-sortable>Piso</th>
+                                <th data-sortable>Número</th>
+                                <th data-sortable>Tipo</th>
+                                <th data-sortable>Capacidad</th>
+                                <th data-sortable>Tarifa por noche</th>
+                                <th data-sortable>Estado</th>
+                                <th data-no-sort>Acciones</th>
                             </tr>
                         </thead>
 
                         <tbody>
                             @foreach (var bedroom in Model)
                             {
-                                <tr>
+                                <tr data-bedroom-row="@bedroom.Id">
+
                                     <td>@bedroom.HotelNombre</td>
                                     <td>@bedroom.PisoNombre</td>
                                     <td>@bedroom.Numero</td>
@@ -86,36 +130,14 @@
                                     <td>@bedroom.TarifaPorNoche.ToString("N2")</td>
 
                                     <td>
-                                        @switch (bedroom.Estado)
-                                        {
-                                            case BedroomState.Disponible:
-                                                <span class="badge bg-success">Disponible</span>
-                                                break;
-
-                                            case BedroomState.Reservada:
-                                                <span class="badge bg-primary">Reservada</span>
-                                                break;
-
-                                            case BedroomState.Ocupada:
-                                                <span class="badge bg-info text-dark">Ocupada</span>
-                                                break;
-
-                                            case BedroomState.Limpieza:
-                                                <span class="badge bg-warning text-dark">Limpieza</span>
-                                                break;
-
-                                            case BedroomState.Mantenimiento:
-                                                <span class="badge bg-secondary">Mantenimiento</span>
-                                                break;
-
-                                            case BedroomState.FueraServicio:
-                                                <span class="badge bg-danger">Fuera de servicio</span>
-                                                break;
-                                        }
+                                        <span class="badge @EstadoCss(bedroom.Estado)"
+                                              data-state-badge>
+                                            @EstadoNombre(bedroom.Estado)
+                                        </span>
                                     </td>
 
                                     <td>
-                                        <div class="d-flex gap-1">
+                                        <div class="d-flex align-items-center gap-2">
 
                                             <a asp-action="Edit"
                                                asp-route-id="@bedroom.Id"
@@ -126,30 +148,33 @@
                                             <form asp-action="ChangeState"
                                                   asp-route-id="@bedroom.Id"
                                                   method="post"
-                                                  class="d-flex gap-1">
+                                                  class="state-change-form">
+
+                                                @Html.AntiForgeryToken()
 
                                                 <select name="estado"
-                                                        class="form-select form-select-sm"
-                                                        style="min-width: 145px">
+                                                        class="form-select form-select-sm state-select">
 
                                                     @foreach (BedroomState state in Enum.GetValues<BedroomState>())
                                                     {
                                                         <option value="@state"
-                                                                selected="@(state == bedroom.Estado ? "selected" : null)">
+                                                                selected="@(state == bedroom.Estado)">
                                                             @EstadoNombre(state)
                                                         </option>
                                                     }
+
                                                 </select>
 
-                                                <button type="submit"
-                                                        class="btn btn-sm btn-outline-secondary">
+                                                <button type="submit" class="btn btn-sm btn-primary">
                                                     Cambiar
                                                 </button>
 
                                             </form>
 
                                         </div>
+
                                     </td>
+
                                 </tr>
                             }
                         </tbody>
