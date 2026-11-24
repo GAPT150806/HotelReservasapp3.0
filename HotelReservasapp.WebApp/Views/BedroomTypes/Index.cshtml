@@ -4,88 +4,87 @@
     ViewData["Title"] = "Tipos de habitaciones";
 }
 
-<div class="container mt-4">
+<div class="management-page">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2>Tipos de habitaciones</h2>
-            <p class="text-muted mb-0">
-                Mantenimiento de tipos y sus características.
-            </p>
-        </div>
+    <div class="management-toolbar">
 
-        <a asp-action="Create" class="btn btn-primary">
-            Registrar tipo
+        <a asp-action="Create" class="btn btn-primary btn-sm">
+            <i class="bi bi-plus-lg me-1"></i> Registrar tipo
         </a>
     </div>
 
     @if (TempData["SuccessMessage"] is string success)
     {
-        <div class="alert alert-success">@success</div>
+        <div class="alert alert-success compact-alert">@success</div>
     }
 
-    <div class="card shadow-sm">
-        <div class="card-body">
-
-            @if (!Model.Any())
-            {
-                <p class="text-muted mb-0">
-                    No hay tipos de habitaciones registrados.
-                </p>
-            }
-            else
-            {
-                
-                <div class="table-tools">
-                    <div class="table-search">
-                        <span>⌕</span>
-                        <input type="search"
-                               class="form-control"
-                               data-table-search
-                               placeholder="Buscar tipo o características..." />
-                    </div>
-
-                    <span class="table-result-count" data-table-count></span>
-                </div>
-
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle" data-enhanced-table>
-
-                        <thead>
-                            <tr>
-                                <th data-sortable>ID</th>
-                                <th data-sortable>Nombre</th>
-                                <th data-sortable>Características</th>
-                                <th class="text-end" data-no-sort>Acciones</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            @foreach (var type in Model)
-                            {
-                                <tr>
-                                    <td>@type.Id</td>
-                                    <td>@type.Nombre</td>
-                                    <td>
-                                        @(string.IsNullOrWhiteSpace(type.Caracteristicas)
-                                            ? "Sin características"
-                                            : type.Caracteristicas)
-                                    </td>
-                                    <td class="text-end">
-                                        <a asp-action="Edit"
-                                           asp-route-id="@type.Id"
-                                           class="btn btn-sm btn-outline-primary">
-                                            Editar
-                                        </a>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-
-                    </table>
-                </div>
-            }
-
+    <div class="management-card">
+        <div class="management-card-header">
+            <div>
+                <h5>Tipos registrados</h5>
+                <span>Tipos de habitaciones disponibles en el sistema.</span>
+            </div>
+            <span class="management-count">@Model.Count() registros</span>
         </div>
+
+        @if (!Model.Any())
+        {
+            <div class="management-empty">
+                <i class="bi bi-grid"></i>
+                <h6>No hay tipos registrados</h6>
+                <p>Registra un tipo de habitación para comenzar.</p>
+            </div>
+        }
+        else
+        {
+            <div class="management-table-tools">
+                <div class="table-search management-search">
+                    <span><i class="bi bi-search"></i></span>
+                    <input type="search" class="form-control"
+                           data-table-search
+                           placeholder="Buscar tipo o características..." />
+                </div>
+                <span class="table-result-count" data-table-count></span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table management-table" data-enhanced-table>
+                    <thead>
+                        <tr>
+                            <th data-sortable>Nombre</th>
+                            <th data-sortable>Características</th>
+                            <th class="text-end" data-no-sort>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var type in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="management-primary-cell">
+                                        <span class="management-row-icon">
+                                            <i class="bi bi-door-open"></i>
+                                        </span>
+                                        <strong>@type.Nombre</strong>
+                                    </div>
+                                </td>
+                                <td>
+                                    @(string.IsNullOrWhiteSpace(type.Caracteristicas)
+                                        ? "Sin características" : type.Caracteristicas)
+                                </td>
+                                <td>
+                                    <div class="management-actions">
+                                        <a asp-action="Edit" asp-route-id="@type.Id"
+                                           class="btn-action btn-action-edit">
+                                            <i class="bi bi-pencil"></i> Editar
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
     </div>
 </div>

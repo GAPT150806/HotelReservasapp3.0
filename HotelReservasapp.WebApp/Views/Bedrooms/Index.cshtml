@@ -1,5 +1,4 @@
-﻿
-@model IEnumerable<HotelReservasapp_.WebApp.Models.ViewModels.Bedrooms.BedroomViewModel>
+﻿@model IEnumerable<HotelReservasapp_.WebApp.Models.ViewModels.Bedrooms.BedroomViewModel>
 @using HotelReservasapp.BusinessLogic.Enums
 
 @{
@@ -7,182 +6,161 @@
 }
 
 @functions {
-    public static string EstadoNombre(BedroomState estado)
+    public static string EstadoNombre(BedroomState estado) => estado switch
     {
-        return estado switch
-        {
-            BedroomState.Disponible => "Disponible",
-            BedroomState.Reservada => "Reservada",
-            BedroomState.Ocupada => "Ocupada",
-            BedroomState.Limpieza => "Limpieza",
-            BedroomState.Mantenimiento => "Mantenimiento",
-            BedroomState.FueraServicio => "Fuera de servicio",
-            _ => "Desconocido"
-        };
-    }
+        BedroomState.Disponible => "Disponible",
+        BedroomState.Reservada => "Reservada",
+        BedroomState.Ocupada => "Ocupada",
+        BedroomState.Limpieza => "Limpieza",
+        BedroomState.Mantenimiento => "Mantenimiento",
+        BedroomState.FueraServicio => "Fuera de servicio",
+        _ => "Desconocido"
+    };
 
-    public static string EstadoCss(BedroomState estado)
+    public static string EstadoCss(BedroomState estado) => estado switch
     {
-        return estado switch
-        {
-            BedroomState.Disponible => "bg-success",
-            BedroomState.Reservada => "bg-primary",
-            BedroomState.Ocupada => "bg-info text-dark",
-            BedroomState.Limpieza => "bg-warning text-dark",
-            BedroomState.Mantenimiento => "bg-secondary",
-            BedroomState.FueraServicio => "bg-danger",
-            _ => "bg-dark"
-        };
-    }
+        BedroomState.Disponible => "status-active",
+        BedroomState.Reservada => "status-reserved",
+        BedroomState.Ocupada => "status-occupied",
+        BedroomState.Limpieza => "status-cleaning",
+        BedroomState.Mantenimiento => "status-maintenance",
+        BedroomState.FueraServicio => "status-inactive",
+        _ => "status-inactive"
+    };
 }
 
-<div class="container-fluid mt-4">
+<div class="management-page">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2>Habitaciones</h2>
-            <p class="text-muted mb-0">
-                Administración de habitaciones de los hoteles.
-            </p>
-        </div>
+    <div class="management-toolbar">
 
-        <a asp-action="Create" class="btn btn-primary">
-            + Registrar habitación
+        <a asp-action="Create" class="btn btn-primary btn-sm">
+            <i class="bi bi-plus-lg me-1"></i> Registrar habitación
         </a>
     </div>
 
-    <div data-state-feedback
-         class="alert d-none"
-         role="status"
-         aria-live="polite">
-    </div>
+    <div data-state-feedback class="alert d-none" role="status" aria-live="polite"></div>
 
-    
-    @if (TempData["SuccessMessage"] is string successMessage)
+    @if (TempData["SuccessMessage"] is string success)
     {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>Correcto:</strong> @successMessage
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
+        <div class="alert alert-success compact-alert">@success</div>
     }
 
-    @if (TempData["ErrorMessage"] is string errorMessage)
+    @if (TempData["ErrorMessage"] is string error)
     {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong>Error:</strong> @errorMessage
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
+        <div class="alert alert-danger compact-alert">@error</div>
     }
 
+    <div class="management-card">
 
-    <div class="card shadow-sm">
-        <div class="card-body">
+        <div class="management-card-header">
+            <div>
+                <h5>Habitaciones registradas</h5>
+                <span>Consulta y administra las habitaciones de los hoteles.</span>
+            </div>
+            <span class="management-count">@Model.Count() registros</span>
+        </div>
 
-            @if (!Model.Any())
-            {
-                <p class="text-muted mb-0">
-                    No hay habitaciones registradas.
-                </p>
-            }
-            else
-            {
-                <div class="table-tools">
-                    <div class="table-search">
-                        <span>⌕</span>
-
-                        <input type="search"
-                               class="form-control"
-                               data-table-search
-                               placeholder="Buscar por hotel, piso, número, tipo o estado..." />
-                    </div>
-
-                    <span class="table-result-count"
-                          data-table-count></span>
+        @if (!Model.Any())
+        {
+            <div class="management-empty">
+                <i class="bi bi-door-closed"></i>
+                <h6>No hay habitaciones registradas</h6>
+                <p>Registra una habitación para comenzar.</p>
+            </div>
+        }
+        else
+        {
+            <div class="management-table-tools">
+                <div class="table-search management-search">
+                    <span><i class="bi bi-search"></i></span>
+                    <input type="search" class="form-control"
+                           data-table-search
+                           placeholder="Buscar por hotel, piso, número, tipo o estado..." />
                 </div>
+                <span class="table-result-count" data-table-count></span>
+            </div>
 
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle"
-                           data-enhanced-table>
+            <div class="table-responsive">
+                <table class="table management-table" data-enhanced-table>
+                    <thead>
+                        <tr>
+                            <th data-sortable>Hotel</th>
+                            <th data-sortable>Piso</th>
+                            <th data-sortable>Habitación</th>
+                            <th data-sortable>Tipo</th>
+                            <th data-sortable>Capacidad</th>
+                            <th data-sortable>Tarifa por noche</th>
+                            <th data-sortable>Estado</th>
+                            <th data-no-sort class="text-end">Acciones</th>
+                        </tr>
+                    </thead>
 
-                        <thead>
-                            <tr>
-                                <th data-sortable>Hotel</th>
-                                <th data-sortable>Piso</th>
-                                <th data-sortable>Número</th>
-                                <th data-sortable>Tipo</th>
-                                <th data-sortable>Capacidad</th>
-                                <th data-sortable>Tarifa por noche</th>
-                                <th data-sortable>Estado</th>
-                                <th data-no-sort>Acciones</th>
-                            </tr>
-                        </thead>
+                    <tbody>
+                        @foreach (var bedroom in Model)
+                        {
+                            <tr data-bedroom-row="@bedroom.Id">
+                                <td>@bedroom.HotelNombre</td>
+                                <td>@bedroom.PisoNombre</td>
 
-                        <tbody>
-                            @foreach (var bedroom in Model)
-                            {
-                                <tr data-bedroom-row="@bedroom.Id">
-
-                                    <td>@bedroom.HotelNombre</td>
-                                    <td>@bedroom.PisoNombre</td>
-                                    <td>@bedroom.Numero</td>
-                                    <td>@bedroom.TipoNombre</td>
-                                    <td>@bedroom.Capacidad</td>
-                                    <td>@bedroom.TarifaPorNoche.ToString("N2")</td>
-
-                                    <td>
-                                        <span class="badge @EstadoCss(bedroom.Estado)"
-                                              data-state-badge>
-                                            @EstadoNombre(bedroom.Estado)
+                                <td>
+                                    <div class="management-primary-cell">
+                                        <span class="management-row-icon">
+                                            <i class="bi bi-door-open"></i>
                                         </span>
-                                    </td>
+                                        <strong>@bedroom.Numero</strong>
+                                    </div>
+                                </td>
 
-                                    <td>
-                                        <div class="d-flex align-items-center gap-2">
+                                <td>@bedroom.TipoNombre</td>
+                                <td>@bedroom.Capacidad huéspedes</td>
+                                <td>@bedroom.TarifaPorNoche.ToString("C")</td>
 
-                                            <a asp-action="Edit"
-                                               asp-route-id="@bedroom.Id"
-                                               class="btn btn-sm btn-outline-primary">
-                                                Editar
-                                            </a>
+                                <td>
+                                    <span class="management-status @EstadoCss(bedroom.Estado)"
+                                          data-state-badge>
+                                        <span></span>
+                                        @EstadoNombre(bedroom.Estado)
+                                    </span>
+                                </td>
 
-                                            <form asp-action="ChangeState"
-                                                  asp-route-id="@bedroom.Id"
-                                                  method="post"
-                                                  class="state-change-form">
+                                <td>
+                                    <div class="management-actions">
+                                        <a asp-action="Edit"
+                                           asp-route-id="@bedroom.Id"
+                                           class="btn-action btn-action-edit">
+                                            <i class="bi bi-pencil"></i> Editar
+                                        </a>
 
-                                                @Html.AntiForgeryToken()
+                                        <form asp-action="ChangeState"
+                                              asp-route-id="@bedroom.Id"
+                                              method="post"
+                                              class="state-change-form">
 
-                                                <select name="estado"
-                                                        class="form-select form-select-sm state-select">
+                                            @Html.AntiForgeryToken()
 
-                                                    @foreach (BedroomState state in Enum.GetValues<BedroomState>())
-                                                    {
-                                                        <option value="@state"
-                                                                selected="@(state == bedroom.Estado)">
-                                                            @EstadoNombre(state)
-                                                        </option>
-                                                    }
+                                            <select name="estado"
+                                                    class="form-select form-select-sm state-select">
+                                                @foreach (BedroomState state in Enum.GetValues<BedroomState>())
+                                                {
+                                                    <option value="@state"
+                                                            selected="@(state == bedroom.Estado)">
+                                                        @EstadoNombre(state)
+                                                    </option>
+                                                }
+                                            </select>
 
-                                                </select>
-
-                                                <button type="submit" class="btn btn-sm btn-primary">
-                                                    Cambiar
-                                                </button>
-
-                                            </form>
-
-                                        </div>
-
-                                    </td>
-
-                                </tr>
-                            }
-                        </tbody>
-
-                    </table>
-                </div>
-            }
-
-        </div>
+                                            <button type="submit"
+                                                    class="btn-action btn-action-edit">
+                                                Cambiar
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
     </div>
 </div>

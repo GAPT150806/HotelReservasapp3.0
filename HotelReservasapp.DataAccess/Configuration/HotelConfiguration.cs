@@ -23,6 +23,18 @@ public class HotelConfiguration : IEntityTypeConfiguration<Hotel>
             .IsUnique()
             .HasDatabaseName("UQ_Hoteles_Nombre"); ;
 
+        builder.Property(h => h.Descripcion)
+            .HasMaxLength(500)
+            .IsRequired(false);
+
+        builder.Property(h => h.Telefono)
+            .HasMaxLength(25)
+            .IsRequired(false);
+
+        builder.Property(h => h.Direccion)
+            .HasMaxLength(250)
+            .IsRequired(false);
+
         builder.Property(h => h.Estado)
             .HasDefaultValueSql("'Activo'")
             .HasColumnType("varchar(15)")

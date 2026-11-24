@@ -1,0 +1,176 @@
+﻿@model IEnumerable<HotelReservasapp_.WebApp.Models.ViewModels.Reservations.ReservationListItemViewModel>
+
+@{
+    ViewData["Title"] = "Reservas";
+}
+
+<div class="management-page">
+
+    <div class="management-toolbar">
+
+        <a asp-controller="Availability"
+           asp-action="Index"
+           class="btn btn-primary btn-sm">
+            <i class="bi bi-plus-lg me-1"></i> Registrar reserva
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] is string success)
+    {
+        <div class="alert alert-success compact-alert">@success</div>
+    }
+
+    @if (TempData["ErrorMessage"] is string error)
+    {
+        <div class="alert alert-danger compact-alert">@error</div>
+    }
+
+    <div class="management-card">
+
+        <div class="management-card-header">
+            <div>
+                <h5>Reservas registradas</h5>
+                <span>Consulta el estado y los detalles de cada reserva.</span>
+            </div>
+            <span class="management-count">@Model.Count() registros</span>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="management-empty">
+                <i class="bi bi-calendar-check"></i>
+                <h6>No hay reservas registradas</h6>
+                <p>Registra una reserva para comenzar.</p>
+            </div>
+        }
+        else
+        {
+            <div class="management-table-tools">
+                <div class="table-search management-search">
+                    <span><i class="bi bi-search"></i></span>
+                    <input type="search" class="form-control"
+                           data-table-search
+                           placeholder="Buscar por huésped, habitación o estado..." />
+                </div>
+                <span class="table-result-count" data-table-count></span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table management-table" data-enhanced-table>
+                    <thead>
+                        <tr>
+                            <th data-sortable>Huésped</th>
+                            <th data-sortable>Habitación</th>
+                            <th data-sortable>Entrada</th>
+                            <th data-sortable>Salida</th>
+                            <th data-sortable>Personas</th>
+                            <th data-sortable>Total</th>
+                            <th data-sortable>Estado</th>
+                            <th class="text-end" data-no-sort>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var reservation in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="management-primary-cell">
+                                        <span class="management-row-icon">
+                                            <i class="bi bi-person"></i>
+                                        </span>
+                                        <strong>@reservation.Huesped</strong>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    @(reservation.NumeroHabitacion == 0
+                                        ? "No disponible"
+                                        : reservation.NumeroHabitacion.ToString())
+                                </td>
+
+                                <td>@reservation.FechaEntrada.ToString("dd/MM/yyyy")</td>
+                                <td>@reservation.FechaSalida.ToString("dd/MM/yyyy")</td>
+                                <td>@reservation.CantidadHuespedes</td>
+                                <td class="fw-semibold">@reservation.Total.ToString("C")</td>
+
+                                <td>
+                                    @if (reservation.Estado == "Confirmada")
+                                    {
+                                        <span class="management-status status-active"><span></span> Confirmada</span>
+                                    }
+                                    else if (reservation.Estado == "Pendiente")
+                                    {
+                                        <span class="management-status status-cleaning"><span></span> Pendiente</span>
+                                    }
+                                    else if (reservation.Estado == "Cancelada")
+                                    {
+                                        <span class="management-status status-inactive"><span></span> Cancelada</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="management-status status-reserved"><span></span> @reservation.Estado</span>
+                                    }
+                                </td>
+
+                                <td>
+                                    <div class="management-actions">
+
+                                        @if (reservation.Estado == "Pendiente" ||
+                                             reservation.Estado == "Confirmada")
+                                        {
+                                            <a asp-action="Edit"
+                                               asp-route-id="@reservation.Id"
+                                               class="btn-action btn-action-edit"
+                                               title="Editar reserva">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                        }
+
+                                        <a asp-controller="Notifications"
+                                           asp-action="Index"
+                                           asp-route-idReserva="@reservation.Id"
+                                           class="btn-action btn-action-edit"
+                                           title="Ver notificaciones">
+                                            <i class="bi bi-bell"></i>
+                                        </a>
+
+                                        @if (reservation.Estado == "Pendiente")
+                                        {
+                                            <form asp-action="Confirm"
+                                                  asp-route-id="@reservation.Id"
+                                                  method="post">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit"
+                                                        class="btn-action btn-action-success"
+                                                        title="Confirmar reserva">
+                                                    <i class="bi bi-check-lg"></i>
+                                                </button>
+                                            </form>
+                                        }
+
+                                        @if (reservation.Estado == "Pendiente" ||
+                                             reservation.Estado == "Confirmada")
+                                        {
+                                            <form asp-action="Cancel"
+                                                  asp-route-id="@reservation.Id"
+                                                  method="post"
+                                                  onsubmit="return confirm('¿Desea cancelar esta reserva?');">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit"
+                                                        class="btn-action btn-action-danger"
+                                                        title="Cancelar reserva">
+                                                    <i class="bi bi-x-lg"></i>
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

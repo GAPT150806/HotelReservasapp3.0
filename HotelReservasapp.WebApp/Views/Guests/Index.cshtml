@@ -1,0 +1,91 @@
+﻿@model IEnumerable<HotelReservasapp_.WebApp.Models.ViewModels.Guests.GuestViewModel>
+
+@{
+    ViewData["Title"] = "Huéspedes";
+}
+
+<div class="management-page">
+
+    <div class="management-toolbar">
+
+        <a asp-action="Create" class="btn btn-primary btn-sm">
+            <i class="bi bi-plus-lg me-1"></i> Registrar huésped
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] is string success)
+    {
+        <div class="alert alert-success compact-alert">@success</div>
+    }
+
+    <div class="management-card">
+        <div class="management-card-header">
+            <div>
+                <h5>Huéspedes registrados</h5>
+                <span>Información de los huéspedes del hotel.</span>
+            </div>
+            <span class="management-count">@Model.Count() registros</span>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="management-empty">
+                <i class="bi bi-people"></i>
+                <h6>No hay huéspedes registrados</h6>
+                <p>Registra un huésped para comenzar.</p>
+            </div>
+        }
+        else
+        {
+            <div class="management-table-tools">
+                <div class="table-search management-search">
+                    <span><i class="bi bi-search"></i></span>
+                    <input type="search" class="form-control"
+                           data-table-search
+                           placeholder="Buscar por nombre, teléfono o correo..." />
+                </div>
+                <span class="table-result-count" data-table-count></span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table management-table" data-enhanced-table>
+                    <thead>
+                        <tr>
+                            <th data-sortable>Nombre</th>
+                            <th data-sortable>Apellido</th>
+                            <th data-sortable>Teléfono</th>
+                            <th data-sortable>Correo electrónico</th>
+                            <th class="text-end" data-no-sort>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var guest in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="management-primary-cell">
+                                        <span class="management-row-icon">
+                                            <i class="bi bi-person"></i>
+                                        </span>
+                                        <strong>@guest.Nombre</strong>
+                                    </div>
+                                </td>
+                                <td>@guest.Apellido</td>
+                                <td>@(string.IsNullOrWhiteSpace(guest.Telefono) ? "—" : guest.Telefono)</td>
+                                <td>@(string.IsNullOrWhiteSpace(guest.Correo) ? "—" : guest.Correo)</td>
+                                <td>
+                                    <div class="management-actions">
+                                        <a asp-action="Edit" asp-route-id="@guest.Id"
+                                           class="btn-action btn-action-edit">
+                                            <i class="bi bi-pencil"></i> Editar
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

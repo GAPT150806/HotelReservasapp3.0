@@ -119,28 +119,37 @@ public sealed class ReservationService : IReservationService
         return reservation;
     }
 
-    public async Task<Reservation> ModifyAsync(int id, int idHabitacion, DateTime fechaEntrada, DateTime fechaSalida, short cantidadHuespedes)
+
+    public async Task<Reservation> ModifyAsync(int id, int idHabitacion, int idHuesped, DateTime fechaEntrada, DateTime fechaSalida, short cantidadHuespedes)
     {
         ValidateId(id);
         ValidateId(idHabitacion);
+        ValidateId(idHuesped);
         ValidateGuestCount(cantidadHuespedes);
 
         var (entrada, salida) = ValidateDates(fechaEntrada, fechaSalida);
 
         var reservation = await GetRequiredReservationAsync(id);
 
-        if (reservation.Estado != ReservaState.Pendiente && reservation.Estado != ReservaState.Confirmada)
+        if (reservation.Estado != ReservaState.Pendiente &&
+            reservation.Estado != ReservaState.Confirmada)
         {
             throw new InvalidOperationException("La reserva no se encuentra en un estado modificable.");
         }
 
-        var hasSignificantChanges = reservation.IdHabitacion != idHabitacion || reservation.FechaEntrada.Date != entrada || reservation.FechaSalida.Date != salida || reservation.CantidadHuespedes != cantidadHuespedes;
+        var guest = await _guestRepository.GetByIdAsync(idHuesped);
+
+        if (guest is null)
+            throw new KeyNotFoundException("El huésped solicitado no existe.");
+
+        var hasSignificantChanges = reservation.IdHabitacion != idHabitacion || reservation.IdHuesped != idHuesped || reservation.FechaEntrada.Date != entrada || reservation.FechaSalida.Date != salida || reservation.CantidadHuespedes != cantidadHuespedes;
 
         var bedroom = await EnsureBookableBedroomAsync(idHabitacion, entrada, salida, cantidadHuespedes, id);
 
         var total = CalculateTotal(bedroom.TarifaPorNoche, entrada, salida);
 
         reservation.IdHabitacion = bedroom.Id;
+        reservation.IdHuesped = guest.Id;
         reservation.FechaEntrada = entrada;
         reservation.FechaSalida = salida;
         reservation.CantidadHuespedes = cantidadHuespedes;
@@ -151,11 +160,14 @@ public sealed class ReservationService : IReservationService
 
         if (hasSignificantChanges)
         {
-            await RegisterNotificationSafelyAsync(reservation.Id, NotificacionType.Modificacion);
+            await RegisterNotificationSafelyAsync(
+                reservation.Id,
+                NotificacionType.Modificacion);
         }
 
         return reservation;
     }
+
 
     public async Task<Reservation> CancelAsync(int id)
     {

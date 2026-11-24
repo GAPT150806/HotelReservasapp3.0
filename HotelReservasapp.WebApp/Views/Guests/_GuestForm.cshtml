@@ -1,0 +1,37 @@
+﻿@model HotelReservasapp_.WebApp.Models.ViewModels.Guests.GuestViewModel
+
+<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+<div class="mb-3">
+    <label asp-for="Nombre" class="form-label"></label>
+    <input asp-for="Nombre"
+           class="form-control"
+           placeholder="Ingrese el nombre" />
+    <span asp-validation-for="Nombre" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Apellido" class="form-label"></label>
+    <input asp-for="Apellido"
+           class="form-control"
+           placeholder="Ingrese el apellido" />
+    <span asp-validation-for="Apellido" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Telefono" class="form-label"></label>
+    <input asp-for="Telefono"
+           type="tel"
+           class="form-control"
+           placeholder="Ejemplo: 809-555-1234" />
+    <span asp-validation-for="Telefono" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Correo" class="form-label"></label>
+    <input asp-for="Correo"
+           type="email"
+           class="form-control"
+           placeholder="correo@ejemplo.com" />
+    <span asp-validation-for="Correo" class="text-danger"></span>
+</div>

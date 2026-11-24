@@ -1,0 +1,93 @@
+﻿@model HotelReservasapp_.WebApp.Models.ViewModels.Reservations.ReservationViewModel
+
+@{
+    ViewData["Title"] = "Modificar reserva";
+}
+
+<div class="container mt-4">
+    <h2>Modificar reserva #@Model.Id</h2>
+    <p class="text-muted">Actualice los datos de la reserva.</p>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <form asp-action="Edit"
+                  asp-route-id="@Model.Id"
+                  method="post">
+
+                <input asp-for="Id" type="hidden" />
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="IdHuesped" class="form-label"></label>
+                    <select asp-for="IdHuesped"
+                            asp-items="Model.Huespedes"
+                            class="form-select">
+                        <option value="">Seleccione un huésped</option>
+                    </select>
+                    <span asp-validation-for="IdHuesped"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="IdHabitacion" class="form-label"></label>
+                    <select asp-for="IdHabitacion"
+                            asp-items="Model.Habitaciones"
+                            class="form-select">
+                        <option value="">Seleccione una habitación</option>
+                    </select>
+                    <span asp-validation-for="IdHabitacion"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label asp-for="FechaEntrada" class="form-label"></label>
+                        <input asp-for="FechaEntrada"
+                               type="date"
+                               class="form-control" />
+                        <span asp-validation-for="FechaEntrada"
+                              class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="FechaSalida" class="form-label"></label>
+                        <input asp-for="FechaSalida"
+                               type="date"
+                               class="form-control" />
+                        <span asp-validation-for="FechaSalida"
+                              class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="CantidadHuespedes"
+                               class="form-label"></label>
+                        <input asp-for="CantidadHuespedes"
+                               type="number"
+                               min="1"
+                               class="form-control" />
+                        <span asp-validation-for="CantidadHuespedes"
+                              class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        Guardar cambios
+                    </button>
+
+                    <a asp-action="Index" class="btn btn-secondary">
+                        Cancelar
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

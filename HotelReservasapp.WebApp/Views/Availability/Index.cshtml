@@ -1,0 +1,187 @@
+﻿@model HotelReservasapp_.WebApp.Models.ViewModels.Availability.AvailabilityViewModel
+
+@{
+    ViewData["Title"] = "Disponibilidad";
+}
+
+<div class="management-page">
+
+    <div class="management-card mb-3">
+        <div class="management-card-header">
+            <div>
+                <h5>Buscar disponibilidad</h5>
+                <span>Define los criterios de búsqueda.</span>
+            </div>
+            <span class="management-row-icon">
+                <i class="bi bi-search"></i>
+            </span>
+        </div>
+
+        <div class="p-3">
+            <form asp-action="Index" method="post">
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3"></div>
+
+                <div class="row g-3 align-items-end">
+
+                    <div class="col-lg-4 col-md-6">
+                        <label asp-for="IdHotel" class="form-label small fw-semibold"></label>
+                        <select asp-for="IdHotel" asp-items="Model.Hoteles"
+                                class="form-select form-select-sm">
+                            <option value="">Seleccione un hotel</option>
+                        </select>
+                        <span asp-validation-for="IdHotel" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-lg-2 col-md-6">
+                        <label asp-for="FechaEntrada" class="form-label small fw-semibold"></label>
+                        <input asp-for="FechaEntrada" type="date"
+                               class="form-control form-control-sm" />
+                        <span asp-validation-for="FechaEntrada" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-lg-2 col-md-6">
+                        <label asp-for="FechaSalida" class="form-label small fw-semibold"></label>
+                        <input asp-for="FechaSalida" type="date"
+                               class="form-control form-control-sm" />
+                        <span asp-validation-for="FechaSalida" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-lg-2 col-md-6">
+                        <label asp-for="CantidadHuespedes"
+                               class="form-label small fw-semibold"></label>
+                        <input asp-for="CantidadHuespedes" type="number" min="1"
+                               class="form-control form-control-sm" />
+                        <span asp-validation-for="CantidadHuespedes" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-lg-2">
+                        <button type="submit" class="btn btn-primary btn-sm w-100">
+                            <i class="bi bi-search me-1"></i> Buscar
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @if (Model.BusquedaRealizada)
+    {
+        <div class="management-card">
+
+            <div class="management-card-header">
+                <div>
+                    <h5>Resultados de disponibilidad</h5>
+                    <span>Habitaciones que cumplen los criterios de búsqueda.</span>
+                </div>
+                <span class="management-count">
+                    @Model.Habitaciones.Count resultados
+                </span>
+            </div>
+
+            <div class="row g-2 p-3">
+                <div class="col-md-3 col-6">
+                    <div class="availability-summary">
+                        <span>Hotel</span>
+                        <strong>@Model.NombreHotel</strong>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="availability-summary">
+                        <span>Noches</span>
+                        <strong>@Model.Noches</strong>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="availability-summary">
+                        <span>Huéspedes</span>
+                        <strong>@Model.CantidadHuespedes</strong>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="availability-summary">
+                        <span>Disponibles</span>
+                        <strong>@Model.Habitaciones.Count</strong>
+                    </div>
+                </div>
+            </div>
+
+            @if (!Model.Habitaciones.Any())
+            {
+                <div class="management-empty">
+                    <i class="bi bi-calendar-x"></i>
+                    <h6>No hay habitaciones disponibles</h6>
+                    <p>No se encontraron habitaciones para los criterios seleccionados.</p>
+                </div>
+            }
+            else
+            {
+                <div class="management-table-tools">
+                    <div class="table-search management-search">
+                        <span><i class="bi bi-search"></i></span>
+                        <input type="search" class="form-control"
+                               data-table-search
+                               placeholder="Buscar habitación o tipo..." />
+                    </div>
+                    <span class="table-result-count" data-table-count></span>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table management-table" data-enhanced-table>
+                        <thead>
+                            <tr>
+                                <th data-sortable>Habitación</th>
+                                <th data-sortable>Piso</th>
+                                <th data-sortable>Tipo</th>
+                                <th data-sortable>Capacidad</th>
+                                <th data-sortable>Por noche</th>
+                                <th data-sortable>Total estimado</th>
+                                <th data-no-sort class="text-end">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var bedroom in Model.Habitaciones)
+                            {
+                                <tr>
+                                    <td>
+                                        <strong>@bedroom.Numero</strong>
+                                    </td>
+                                    <td>@bedroom.NumeroPiso</td>
+                                    <td>
+                                        <strong>@bedroom.TipoHabitacion</strong>
+                                        @if (!string.IsNullOrWhiteSpace(bedroom.Caracteristicas))
+                                        {
+                                            <small class="d-block text-muted">
+                                                @bedroom.Caracteristicas
+                                            </small>
+                                        }
+                                    </td>
+                                    <td>@bedroom.Capacidad huéspedes</td>
+                                    <td>@bedroom.TarifaPorNoche.ToString("C")</td>
+                                    <td class="fw-semibold">@bedroom.TotalEstimado.ToString("C")</td>
+                                    <td>
+                                        <a asp-controller="Reservations"
+                                           asp-action="Create"
+                                           asp-route-idHabitacion="@bedroom.Id"
+                                           asp-route-fechaEntrada="@Model.FechaEntrada?.ToString("yyyy-MM-dd")"
+                                           asp-route-fechaSalida="@Model.FechaSalida?.ToString("yyyy-MM-dd")"
+                                           asp-route-cantidadHuespedes="@Model.CantidadHuespedes"
+                                           class="btn-action btn-action-edit">
+                                            <i class="bi bi-calendar-plus"></i> Reservar
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

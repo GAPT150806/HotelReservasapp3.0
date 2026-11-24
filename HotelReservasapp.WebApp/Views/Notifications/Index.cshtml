@@ -1,0 +1,161 @@
+﻿@using HotelReservasapp.BusinessLogic.Enums
+@model IEnumerable<HotelReservasapp_.WebApp.Models.ViewModels.Notifications.NotificationViewModel>
+
+@{
+    ViewData["Title"] = "Notificaciones";
+
+    var notifications = Model.ToList();
+    var pendientes = notifications.Count(n => n.Estado == NotificationState.Pendiente);
+    var enviadas = notifications.Count(n => n.Estado == NotificationState.Enviada);
+    var fallidas = notifications.Count(n => n.Estado == NotificationState.Fallida);
+}
+
+<div class="management-page">
+
+    <div class="management-toolbar">
+        <p class="management-description">
+            Historial de notificaciones asociadas a la reserva #@ViewBag.IdReserva.
+        </p>
+
+        <a asp-controller="Reservations" asp-action="Index"
+           class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Volver a reservas
+        </a>
+    </div>
+
+    <div class="row g-3 mb-3">
+
+        <div class="col-md-4">
+            <div class="management-stat-card">
+                <div>
+                    <span>Pendientes</span>
+                    <strong>@pendientes</strong>
+                </div>
+                <i class="bi bi-clock-history text-warning"></i>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="management-stat-card">
+                <div>
+                    <span>Enviadas</span>
+                    <strong>@enviadas</strong>
+                </div>
+                <i class="bi bi-check-circle text-success"></i>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="management-stat-card">
+                <div>
+                    <span>Fallidas</span>
+                    <strong>@fallidas</strong>
+                </div>
+                <i class="bi bi-exclamation-circle text-danger"></i>
+            </div>
+        </div>
+
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success compact-alert">@TempData["Success"]</div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger compact-alert">@TempData["Error"]</div>
+    }
+
+    <div class="management-card">
+
+        <div class="management-card-header">
+            <div>
+                <h5>Notificaciones registradas</h5>
+                <span>Historial de procesamiento de esta reserva.</span>
+            </div>
+            <span class="management-count">@notifications.Count registros</span>
+        </div>
+
+        @if (!notifications.Any())
+        {
+            <div class="management-empty">
+                <i class="bi bi-bell-slash"></i>
+                <h6>Sin notificaciones</h6>
+                <p>Esta reserva todavía no tiene notificaciones registradas.</p>
+            </div>
+        }
+        else
+        {
+            <div class="management-table-tools">
+                <div class="table-search management-search">
+                    <span><i class="bi bi-search"></i></span>
+                    <input type="search" class="form-control"
+                           data-table-search
+                           placeholder="Buscar por huésped, tipo o estado..." />
+                </div>
+                <span class="table-result-count" data-table-count></span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table management-table" data-enhanced-table>
+                    <thead>
+                        <tr>
+                            <th data-sortable>Huésped</th>
+                            <th data-sortable>Tipo</th>
+                            <th data-sortable>Estado</th>
+                            <th data-sortable>Fecha de creación</th>
+                            <th data-sortable>Fecha de envío</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var notification in notifications)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="management-primary-cell">
+                                        <span class="management-row-icon">
+                                            <i class="bi bi-person"></i>
+                                        </span>
+                                        <strong>@notification.Huesped</strong>
+                                    </div>
+                                </td>
+
+                                <td>@notification.Tipo</td>
+
+                                <td>
+                                    @if (notification.Estado == NotificationState.Pendiente)
+                                    {
+                                        <span class="management-status status-cleaning"><span></span> Pendiente</span>
+                                    }
+                                    else if (notification.Estado == NotificationState.Enviada)
+                                    {
+                                        <span class="management-status status-active"><span></span> Enviada</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="management-status status-inactive"><span></span> Fallida</span>
+                                    }
+                                </td>
+
+                                <td>@notification.FechaCreacion.ToString("dd/MM/yyyy HH:mm")</td>
+
+                                <td>
+                                    @if (notification.FechaEnvio.HasValue)
+                                    {
+                                        @notification.FechaEnvio.Value.ToString("dd/MM/yyyy HH:mm")
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No registrada</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

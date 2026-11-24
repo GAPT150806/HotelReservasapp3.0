@@ -5,133 +5,123 @@
     ViewData["Title"] = "Pisos";
 }
 
-<div class="container mt-4">
+<div class="management-page">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2>Pisos</h2>
-            <p class="text-muted mb-0">
-                Administración de pisos por hotel.
-            </p>
-        </div>
-
-        <a asp-action="Create" class="btn btn-primary">
-            Registrar piso
+    <div class="management-toolbar">
+        <a asp-action="Create" class="btn btn-primary btn-sm">
+            <i class="bi bi-plus-lg me-1"></i> Registrar piso
         </a>
     </div>
 
     @if (TempData["SuccessMessage"] is string success)
     {
-        <div class="alert alert-success">@success</div>
+        <div class="alert alert-success compact-alert">@success</div>
     }
 
     @if (TempData["ErrorMessage"] is string error)
     {
-        <div class="alert alert-danger">@error</div>
+        <div class="alert alert-danger compact-alert">@error</div>
     }
 
-    <div class="card shadow-sm">
-        <div class="card-body">
+    <div class="management-card">
+        <div class="management-card-header">
+            <div>
+                <h5>Pisos registrados</h5>
+                <span>Consulta y administra los pisos de cada hotel.</span>
+            </div>
+            <span class="management-count">@Model.Count() registros</span>
+        </div>
 
-            @if (!Model.Any())
-            {
-                <p class="text-muted mb-0">
-                    No hay pisos registrados.
-                </p>
-            }
-            else
-            {
-                
-                <div class="table-tools">
-                    <div class="table-search">
-                        <span>⌕</span>
-                        <input type="search"
-                               class="form-control"
-                               data-table-search
-                               placeholder="Buscar por hotel, piso o estado..." />
-                    </div>
-
-                    <span class="table-result-count" data-table-count></span>
+        @if (!Model.Any())
+        {
+            <div class="management-empty">
+                <i class="bi bi-layers"></i>
+                <h6>No hay pisos registrados</h6>
+                <p>Registra un piso para comenzar.</p>
+            </div>
+        }
+        else
+        {
+            <div class="management-table-tools">
+                <div class="table-search management-search">
+                    <span><i class="bi bi-search"></i></span>
+                    <input type="search" class="form-control"
+                           data-table-search
+                           placeholder="Buscar por hotel, piso o estado..." />
                 </div>
+                <span class="table-result-count" data-table-count></span>
+            </div>
 
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle" data-enhanced-table>
-
-                        <thead>
+            <div class="table-responsive">
+                <table class="table management-table" data-enhanced-table>
+                    <thead>
+                        <tr>
+                            <th data-sortable>Hotel</th>
+                            <th data-sortable>Número</th>
+                            <th data-sortable>Estado</th>
+                            <th class="text-end" data-no-sort>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var floor in Model)
+                        {
                             <tr>
-                                <th data-sortable>ID</th>
-                                <th data-sortable>Hotel</th>
-                                <th data-sortable>Número</th>
-                                <th data-sortable>Estado</th>
-                                <th class="text-end" data-no-sort>Acciones</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            @foreach (var floor in Model)
-                            {
-                                <tr>
-                                    <td>@floor.Id</td>
-                                    <td>@floor.HotelNombre</td>
-                                    <td>@floor.Numero</td>
-
-                                    <td>
-                                        @if (floor.Estado == GeneralState.Activo)
-                                        {
-                                            <span class="badge bg-success">
-                                                Activo
-                                            </span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge bg-secondary">
-                                                Inactivo
-                                            </span>
-                                        }
-                                    </td>
-
-                                    <td class="text-end">
-
-                                        <a asp-action="Edit"
-                                           asp-route-id="@floor.Id"
-                                           class="btn btn-sm btn-outline-primary">
-                                            Editar
+                                <td>
+                                    <div class="management-primary-cell">
+                                        <span class="management-row-icon">
+                                            <i class="bi bi-building"></i>
+                                        </span>
+                                        <strong>@floor.HotelNombre</strong>
+                                    </div>
+                                </td>
+                                <td>@floor.Numero</td>
+                                <td>
+                                    @if (floor.Estado == GeneralState.Activo)
+                                    {
+                                        <span class="management-status status-active">
+                                            <span></span> Activo
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="management-status status-inactive">
+                                            <span></span> Inactivo
+                                        </span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="management-actions">
+                                        <a asp-action="Edit" asp-route-id="@floor.Id"
+                                           class="btn-action btn-action-edit">
+                                            <i class="bi bi-pencil"></i> Editar
                                         </a>
 
                                         <form asp-action="ChangeState"
-                                              asp-route-id="@floor.Id"
-                                              method="post"
-                                              class="d-inline">
-
-                                            <input type="hidden"
-                                                   name="estado"
-                                                   value="@(floor.Estado == GeneralState.Activo ? GeneralState.Inactivo : GeneralState.Activo)" />
+                                              asp-route-id="@floor.Id" method="post">
+                                            <input type="hidden" name="estado"
+                                                   value="@(floor.Estado == GeneralState.Activo
+                                                       ? GeneralState.Inactivo : GeneralState.Activo)" />
 
                                             @if (floor.Estado == GeneralState.Activo)
                                             {
-                                                <button type="submit"
-                                                        class="btn btn-sm btn-outline-danger">
-                                                    Desactivar
+                                                <button type="submit" class="btn-action btn-action-danger">
+                                                    <i class="bi bi-power"></i> Desactivar
                                                 </button>
                                             }
                                             else
                                             {
-                                                <button type="submit"
-                                                        class="btn btn-sm btn-outline-success">
-                                                    Activar
+                                                <button type="submit" class="btn-action btn-action-success">
+                                                    <i class="bi bi-check-circle"></i> Activar
                                                 </button>
                                             }
-
                                         </form>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-
-                    </table>
-                </div>
-            }
-
-        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
     </div>
 </div>

@@ -1,0 +1,34 @@
+﻿@model HotelReservasapp_.WebApp.Models.ViewModels.Guests.GuestViewModel
+
+@{
+    ViewData["Title"] = "Registrar huésped";
+}
+
+<div class="container mt-4">
+    <h2>Registrar huésped</h2>
+    <p class="text-muted">Registre la información del huésped.</p>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <form asp-action="Create" method="post">
+
+                <partial name="_GuestForm" model="Model" />
+
+                <button type="submit" class="btn btn-primary">
+                    Guardar
+                </button>
+
+                <a asp-action="Index" class="btn btn-secondary">
+                    Cancelar
+                </a>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

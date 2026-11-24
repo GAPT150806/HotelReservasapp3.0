@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.querySelectorAll("table[data-enhanced-table]").forEach(table => {
 
-        const container = table.closest(".card-body");
+        const container = table.closest(".management-card, .card-body");
         const searchInput = container?.querySelector("[data-table-search]");
         const countLabel = container?.querySelector("[data-table-count]");
         const tbody = table.querySelector("tbody");

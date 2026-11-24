@@ -50,13 +50,25 @@ public class HomeController : Controller
 
         var model = new DashboardViewModel
         {
-            TotalHoteles = hoteles.Count, HotelesActivos = hoteles.Count(h => h.Estado == GeneralState.Activo),
+            TotalHoteles = hoteles.Count,
+            HotelesActivos = hoteles.Count(h => h.Estado == GeneralState.Activo),
 
-            TotalPisos = pisos.Count, PisosActivos = pisos.Count(p => p.Estado == GeneralState.Activo),
+            TotalPisos = pisos.Count,
+            PisosActivos = pisos.Count(p => p.Estado == GeneralState.Activo),
 
-            TotalHabitaciones = totalHabitaciones, TotalTiposHabitacion = tipos.Count,
+            TotalHabitaciones = totalHabitaciones,
+            TotalTiposHabitacion = tipos.Count,
 
-            EstadosHabitaciones = estados
+            EstadosHabitaciones = estados,
+
+            Hoteles = hoteles.Select(h => new HotelCardViewModel
+            {
+                Id = h.Id,
+                Nombre = h.Nombre,
+                Estado = h.Estado.ToString(),
+                TotalPisos = pisos.Count(p => p.IdHotel == h.Id),
+                TotalHabitaciones = habitaciones.Count(b => b.IdHotel == h.Id)
+            }).ToList()
         };
 
         return View(model);

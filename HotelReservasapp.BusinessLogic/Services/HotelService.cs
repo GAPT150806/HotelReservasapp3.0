@@ -27,12 +27,12 @@ public sealed class HotelService : IHotelService
         return await _hotelRepository.GetByIdAsync(id);
     }
 
-    public async Task<Hotel> CreateAsync(string nombre)
+
+    public async Task<Hotel> CreateAsync(string nombre, string? descripcion, string? telefono, string? direccion)
     {
         nombre = ValidateName(nombre);
 
-        var existingHotel =
-            await _hotelRepository.GetByNameAsync(nombre);
+        var existingHotel = await _hotelRepository.GetByNameAsync(nombre);
 
         if (existingHotel is not null)
             throw new InvalidOperationException("Ya existe un hotel con ese nombre.");
@@ -40,6 +40,9 @@ public sealed class HotelService : IHotelService
         var hotel = new Hotel
         {
             Nombre = nombre,
+            Descripcion = descripcion?.Trim(),
+            Telefono = telefono?.Trim(),
+            Direccion = direccion?.Trim(),
             Estado = GeneralState.Activo
         };
 
@@ -48,15 +51,16 @@ public sealed class HotelService : IHotelService
         return hotel;
     }
 
-    public async Task<Hotel> UpdateAsync(int id, string nombre)
+
+
+    public async Task<Hotel> UpdateAsync(int id, string nombre, string? descripcion, string? telefono, string? direccion)
     {
         if (id <= 0)
             throw new ArgumentOutOfRangeException(nameof(id));
 
         nombre = ValidateName(nombre);
 
-        var hotel = await _hotelRepository.GetByIdAsync(id)
-            ?? throw new KeyNotFoundException("El hotel solicitado no existe.");
+        var hotel = await _hotelRepository.GetByIdAsync(id) ?? throw new KeyNotFoundException("El hotel solicitado no existe.");
 
         var existingHotel = await _hotelRepository.GetByNameAsync(nombre);
 
@@ -64,11 +68,15 @@ public sealed class HotelService : IHotelService
             throw new InvalidOperationException("Ya existe otro hotel con ese nombre.");
 
         hotel.Nombre = nombre;
+        hotel.Descripcion = descripcion?.Trim();
+        hotel.Telefono = telefono?.Trim();
+        hotel.Direccion = direccion?.Trim();
 
         await _hotelRepository.UpdateAsync(hotel);
 
         return hotel;
     }
+
 
     public async Task<Hotel> ChangeStateAsync(int id, GeneralState estado)
     {

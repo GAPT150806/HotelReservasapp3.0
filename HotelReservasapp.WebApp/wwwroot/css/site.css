@@ -1108,3 +1108,545 @@ body {
     }
 }
 
+/* Carrusel horizontal de hoteles */
+
+.hotel-carousel {
+    display: flex;
+    gap: 18px;
+    overflow-x: auto;
+    padding: 4px 2px 14px;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+}
+
+.hotel-carousel-card {
+    flex: 0 0 220px;
+    text-decoration: none;
+    color: var(--text-primary);
+}
+
+.hotel-image-placeholder {
+    width: 100%;
+    height: 135px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f1f4f8;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: #9aa9ba;
+    font-size: 42px;
+}
+
+.hotel-carousel-card h4 {
+    margin: 10px 0 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.hotel-carousel-card:hover .hotel-image-placeholder {
+    border-color: #0d6efd;
+}
+
+.hotel-carousel-card:hover h4 {
+    color: #0d6efd;
+}
+.header-user {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--text-primary);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* =========================================
+   PANTALLAS ADMINISTRATIVAS COMPACTAS
+========================================= */
+
+.management-page {
+    width: 100%;
+    max-width: 1320px;
+    margin: 0 auto;
+}
+
+/* Barra superior */
+
+.management-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 16px;
+}
+
+.management-description {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
+.management-toolbar .btn {
+    padding: 8px 13px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Tarjeta principal */
+
+.management-card {
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 2px 9px rgba(25, 43, 69, .045);
+}
+
+.management-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 15px 18px;
+    border-bottom: 1px solid var(--border);
+}
+
+    .management-card-header h5 {
+        margin: 0;
+        color: var(--text-primary);
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .management-card-header span {
+        display: block;
+        margin-top: 4px;
+        color: var(--text-secondary);
+        font-size: 11px;
+    }
+
+    .management-card-header .management-count {
+        margin: 0;
+        padding: 5px 9px;
+        border-radius: 6px;
+        background: #f1f4f8;
+        color: #52647b;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+/* Búsqueda */
+
+.management-table-tools {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 18px;
+}
+
+.management-search {
+    max-width: 310px;
+}
+
+    .management-search input {
+        min-height: 34px;
+        font-size: 12px;
+    }
+
+/* Tabla */
+
+.management-table {
+    font-size: 12px;
+}
+
+    .management-table thead th {
+        padding: 10px 15px;
+        background: #f6f8fb !important;
+        color: #64748b !important;
+        font-size: 11px;
+        font-weight: 700;
+        border-top: 1px solid var(--border);
+    }
+
+    .management-table tbody td {
+        padding: 11px 15px;
+        color: #34445a;
+        border-bottom: 1px solid #edf0f4;
+    }
+
+    .management-table tbody tr:last-child td {
+        border-bottom: 0;
+    }
+
+    .management-table tbody tr:hover td {
+        background: #f8faff;
+    }
+
+.management-address {
+    min-width: 190px;
+    max-width: 300px;
+}
+
+/* Nombre del hotel */
+
+.management-primary-cell {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    white-space: nowrap;
+}
+
+    .management-primary-cell strong {
+        color: var(--text-primary);
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+.management-row-icon {
+    width: 29px;
+    height: 29px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 7px;
+    background: #edf3ff;
+    color: var(--primary);
+    font-size: 14px;
+}
+
+/* Estados */
+
+.management-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+    .management-status > span {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+    }
+
+.status-active {
+    background: #e3f5eb;
+    color: #167447;
+}
+
+    .status-active > span {
+        background: #198754;
+    }
+
+.status-inactive {
+    background: #edf0f4;
+    color: #64748b;
+}
+
+    .status-inactive > span {
+        background: #94a3b8;
+    }
+
+/* Acciones */
+
+.management-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+}
+
+    .management-actions form {
+        margin: 0;
+    }
+
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    min-height: 29px;
+    padding: 5px 9px;
+    border: 1px solid;
+    border-radius: 6px;
+    background: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: background .15s, border-color .15s;
+}
+
+.btn-action-edit {
+    border-color: #c8d9f5;
+    color: #1758b5;
+}
+
+    .btn-action-edit:hover {
+        background: #edf4ff;
+    }
+
+.btn-action-danger {
+    border-color: #f1cccc;
+    color: #c43d48;
+}
+
+    .btn-action-danger:hover {
+        background: #fff1f1;
+    }
+
+.btn-action-success {
+    border-color: #c7e8d3;
+    color: #198754;
+}
+
+    .btn-action-success:hover {
+        background: #edf9f1;
+    }
+
+/* Pie */
+
+.management-card-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 9px 18px;
+    border-top: 1px solid var(--border);
+    background: #fcfdff;
+    color: #8491a3;
+    font-size: 10px;
+}
+
+/* Estado vacío */
+
+.management-empty {
+    padding: 38px 15px;
+    text-align: center;
+}
+
+    .management-empty > i {
+        color: #9aabc0;
+        font-size: 32px;
+    }
+
+    .management-empty h6 {
+        margin: 10px 0 5px;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .management-empty p {
+        margin-bottom: 15px;
+        color: var(--text-secondary);
+        font-size: 11px;
+    }
+
+/* Alertas */
+
+.compact-alert {
+    padding: 10px 13px;
+    margin-bottom: 13px;
+    font-size: 12px;
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+    .management-toolbar {
+        align-items: flex-start;
+    }
+
+    .management-card-header {
+        padding: 12px;
+    }
+
+    .management-table-tools {
+        align-items: stretch;
+        flex-direction: column;
+        padding: 12px;
+    }
+
+    .management-search {
+        max-width: none;
+    }
+
+    .management-table {
+        min-width: 720px;
+    }
+}
+
+@media (max-width: 480px) {
+    .management-toolbar {
+        flex-direction: column;
+    }
+
+        .management-toolbar .btn {
+            width: 100%;
+        }
+}
+
+/* Estados operativos de habitaciones y reservas */
+
+.status-reserved {
+    background: #e8efff;
+    color: #3159a5;
+}
+
+.status-occupied {
+    background: #e2f2fb;
+    color: #176b91;
+}
+
+.status-cleaning {
+    background: #fff3d9;
+    color: #95610b;
+}
+
+.status-maintenance {
+    background: #edf0f4;
+    color: #596579;
+}
+
+/* Resumen de disponibilidad */
+
+.availability-summary {
+    height: 100%;
+    padding: 11px 13px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #f8faff;
+}
+
+    .availability-summary span {
+        display: block;
+        margin-bottom: 5px;
+        color: var(--text-secondary);
+        font-size: 10px;
+    }
+
+    .availability-summary strong {
+        color: var(--text-primary);
+        font-size: 13px;
+    }
+
+/* Indicadores de notificaciones */
+
+.management-stat-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 17px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(25, 43, 69, .04);
+}
+
+    .management-stat-card span {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--text-secondary);
+        font-size: 11px;
+    }
+
+    .management-stat-card strong {
+        color: var(--text-primary);
+        font-size: 23px;
+        font-weight: 700;
+    }
+
+    .management-stat-card > i {
+        font-size: 23px;
+    }
+
+/* Selector de estado de habitación */
+
+.state-change-form {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 0;
+}
+
+    .state-change-form .form-select {
+        width: auto;
+        min-width: 115px;
+        min-height: 29px;
+        padding: 4px 25px 4px 8px;
+        border-radius: 6px;
+        font-size: 10px;
+    }
+
+.management-table td {
+    white-space: nowrap;
+}
+
+    .management-table td:nth-child(1),
+    .management-table td:nth-child(2) {
+        white-space: normal;
+    }
+
+@media (max-width: 768px) {
+    .management-stat-card {
+        padding: 12px;
+    }
+
+        .management-stat-card strong {
+            font-size: 20px;
+        }
+}
+
+/* Iconografía del menú lateral */
+
+.sidebar .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    min-height: 43px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    transition: background-color .18s ease, color .18s ease;
+}
+
+    .sidebar .nav-link > i {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        min-width: 20px;
+        font-size: 17px;
+        line-height: 1;
+    }
+
+    .sidebar .nav-link:hover {
+        background-color: rgba(255,255,255,.08);
+    }
+
+    .sidebar .nav-link.active {
+        background-color: #245ba0;
+        color: #fff;
+        font-weight: 600;
+    }
+
+        .sidebar .nav-link.active > i {
+            color: #fff;
+        } 
+
+.sidebar-link > i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    min-width: 20px;
+    font-size: 17px;
+    line-height: 1;
+}

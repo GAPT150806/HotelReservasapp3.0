@@ -13,6 +13,7 @@
     <title>@ViewData["Title"] - Hotel LosBros</title>
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/HotelReservasapp_.WebApp.styles.css" asp-append-version="true" />
 </head>
@@ -44,49 +45,69 @@
                 MENÚ PRINCIPAL
             </div>
 
+
             <nav class="sidebar-nav">
 
                 <a asp-controller="Home"
                    asp-action="Index"
                    class="sidebar-link @(currentController == "Home" ? "active" : "")">
-                    <span class="nav-icon">⌂</span>
+                    <i class="bi bi-house-door"></i>
                     <span>Inicio</span>
                 </a>
 
                 <a asp-controller="Hotels"
                    asp-action="Index"
                    class="sidebar-link @(currentController == "Hotels" ? "active" : "")">
-                    <span class="nav-icon">▤</span>
+                    <i class="bi bi-buildings"></i>
                     <span>Hoteles</span>
                 </a>
 
                 <a asp-controller="Floors"
                    asp-action="Index"
                    class="sidebar-link @(currentController == "Floors" ? "active" : "")">
-                    <span class="nav-icon">▥</span>
+                    <i class="bi bi-layers"></i>
                     <span>Pisos</span>
                 </a>
 
                 <a asp-controller="Bedrooms"
                    asp-action="Index"
                    class="sidebar-link @(currentController == "Bedrooms" ? "active" : "")">
-                    <span class="nav-icon">▦</span>
+                    <i class="bi bi-door-closed"></i>
                     <span>Habitaciones</span>
                 </a>
 
                 <a asp-controller="BedroomTypes"
                    asp-action="Index"
                    class="sidebar-link @(currentController == "BedroomTypes" ? "active" : "")">
-                    <span class="nav-icon">◇</span>
+                    <i class="bi bi-grid-3x3-gap"></i>
                     <span>Tipos de habitaciones</span>
+                </a>
+
+                <a asp-controller="Guests"
+                   asp-action="Index"
+                   class="sidebar-link @(currentController == "Guests" ? "active" : "")">
+                    <i class="bi bi-people"></i>
+                    <span>Huéspedes</span>
+                </a>
+
+                <a asp-controller="Availability"
+                   asp-action="Index"
+                   class="sidebar-link @(currentController == "Availability" ? "active" : "")">
+                    <i class="bi bi-calendar2-check"></i>
+                    <span>Disponibilidad</span>
+                </a>
+
+                <a asp-controller="Reservations"
+                   asp-action="Index"
+                   class="sidebar-link @(currentController == "Reservations" ? "active" : "")">
+                    <i class="bi bi-journal-check"></i>
+                    <span>Reservas</span>
                 </a>
 
             </nav>
 
-            <div class="sidebar-footer">
-                <span class="sidebar-footer-icon">●</span>
-                <span>Sistema administrativo</span>
-            </div>
+
+
 
         </aside>
 
@@ -107,16 +128,30 @@
 
                     <div>
                         <h1>@ViewData["Title"]</h1>
-                        <p>Hotel LosBros · Sistema de gestión</p>
                     </div>
 
                 </div>
 
+
                 <div class="header-right">
-                    <span class="header-date">
-                        @DateTime.Now.ToString("dd/MM/yyyy")
-                    </span>
+                    <div class="header-user">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             width="21"
+                             height="21"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="1.8"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="4"></circle>
+                            <path d="M5 21a7 7 0 0 1 14 0"></path>
+                        </svg>
+
+                        <span>Administrador</span>
+                    </div>
                 </div>
+
 
             </header>
 

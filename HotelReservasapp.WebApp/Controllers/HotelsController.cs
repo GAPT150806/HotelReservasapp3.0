@@ -24,7 +24,11 @@ public class HotelsController : Controller
         {
             Id = h.Id,
             Nombre = h.Nombre,
+            Descripcion = h.Descripcion,
+            Telefono = h.Telefono,
+            Direccion = h.Direccion,
             Estado = h.Estado
+
         });
 
         return View(model);
@@ -45,7 +49,7 @@ public class HotelsController : Controller
 
         try
         {
-            await _hotelService.CreateAsync(model.Nombre);
+            await _hotelService.CreateAsync(model.Nombre, model.Descripcion, model.Telefono, model.Direccion);
 
             TempData["SuccessMessage"] = "Hotel registrado correctamente.";
 
@@ -77,6 +81,9 @@ public class HotelsController : Controller
         var model = new HotelViewModel
         {
             Id = hotel.Id,
+            Descripcion = hotel.Descripcion,
+            Telefono = hotel.Telefono,
+            Direccion = hotel.Direccion,
             Nombre = hotel.Nombre
         };
 
@@ -95,7 +102,7 @@ public class HotelsController : Controller
 
         try
         {
-            await _hotelService.UpdateAsync(id, model.Nombre);
+            await _hotelService.UpdateAsync(id, model.Nombre, model.Descripcion, model.Telefono, model.Direccion);
 
             TempData["SuccessMessage"] = "Hotel actualizado correctamente.";
 

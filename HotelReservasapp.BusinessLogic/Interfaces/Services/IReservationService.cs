@@ -14,7 +14,7 @@ public interface IReservationService
 
     Task<Reservation> ConfirmAsync(int id);
 
-    Task<Reservation> ModifyAsync(int id, int idHabitacion, DateTime fechaEntrada, DateTime fechaSalida, short cantidadHuespedes);
+    Task<Reservation> ModifyAsync(int id, int idHabitacion, int idHuesped, DateTime fechaEntrada, DateTime fechaSalida, short cantidadHuespedes);
 
     Task<Reservation> CancelAsync(int id);
 }
